@@ -185,15 +185,15 @@ def render_single(env, policy):
 			break
 	assert done
 	env.render();
-	print "Episode reward: %f" % episode_reward
+	print("Episode reward: %f" % episode_reward)
 
 
 # Feel free to run your own debug code in main!
 # Play around with these hyperparameters.
 if __name__ == "__main__":
 	env = gym.make("Deterministic-4x4-FrozenLake-v0")
-	print env.__doc__
-	print "Here is an example of state, action, reward, and next state"
+	print(env.__doc__)
+	print("Here is an example of state, action, reward, and next state")
 	example(env)
 	V_vi, p_vi = value_iteration(env.P, env.nS, env.nA, gamma=0.9, max_iteration=20, tol=1e-3)
 	V_pi, p_pi = policy_iteration(env.P, env.nS, env.nA, gamma=0.9, max_iteration=20, tol=1e-3)

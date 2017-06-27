@@ -5,6 +5,7 @@
 import numpy as np
 import gym
 import time
+import os
 from lake_envs import *
 
 from vi_and_pi import value_iteration
@@ -88,11 +89,12 @@ def counts_and_rewards_to_P(counts, rewards):
 
   for state in range(nS):
     for action in range(nA):
-      if sum(counts[state][action]) != 0:
+      if sum(counts[state][action]) != 0: # this state and action have been tried
         for next_state in range(nS):
-          if counts[state][action][next_state] != 0:
+          if counts[state][action][next_state] != 0: # the next_state has been tried
             prob = float(counts[state][action][next_state]) / float(sum(counts[state][action]))
-            reward = rewards[state][action][next_state]
+            # reward = rewards[state][action][next_state]
+            reward = float(rewards[state][action][next_state]) / float(counts[state][action][next_state])
             P[state][action].append((prob, next_state, reward, False))
       else:
         prob = 1.0 / float(nS)
@@ -123,6 +125,13 @@ def update_mdp_model_with_history(counts, rewards, history):
   ############################
 
   return counts, rewards
+
+def display_P(P):
+  for init_state in range(len(P)):
+    for action in range(len(P[init_state])):
+      print("\nState: %d, action: %d" % (init_state, action))
+      for next_state in P[init_state][action]:
+        print(next_state)
 
 def learn_with_mdp_model(env, num_episodes=5000, gamma = 0.95, e = 0.8, decay_rate = 0.99):
   """Build a model of the environment and use value iteration to learn a policy. In the next episode, play with the new 
@@ -160,13 +169,28 @@ def learn_with_mdp_model(env, num_episodes=5000, gamma = 0.95, e = 0.8, decay_ra
     policy: np.array
       An array of shape [env.nS] representing the action to take at a given state.
     """
-
   P = initialize_P(env.nS, env.nA)
   counts = initialize_counts(env.nS, env.nA)
   rewards = initialize_rewards(env.nS, env.nA)
 
   ############################
   # YOUR IMPLEMENTATION HERE #
+  nS = env.nS
+  nA = env.nA
+  for epi in range(num_episodes):
+    state = env.reset()
+    while True:
+      action = np.random.randint(nA)
+      obs, reward, done, _ = env.step(action)
+      rewards[state][action][obs] += reward
+      counts[state][action][obs] += 1
+      state = obs
+      if done:
+        break
+
+  P = counts_and_rewards_to_P(counts, rewards)
+
+  display_P(P)
   ############################
 
   return np.zeros((env.nS)).astype(int)
@@ -193,13 +217,28 @@ def render_single(env, policy):
     state, reward, done, _ = env.step(action)
     episode_reward += reward
 
-  print "Episode reward: %f" % episode_reward
+  print("Episode reward: %f" % episode_reward)
 
 # Feel free to run your own debug code in main!
 def main():
   env = gym.make('Stochastic-4x4-FrozenLake-v0')
-  policy = learn_with_mdp_model(env)
-  render_single(env, policy)
+  learn_with_mdp_model(env)
+  # for i in range(10):
+  #   print('\n%d' % i)
+  #   env.render()
+  #   print(env.step(env.action_space.sample()))
+  # env.render()
+  # for init_state in env.P.keys():
+  #   for action in env.P[init_state]:
+  #     print("\nState: %d, action: %d" % (init_state, action))
+  #     for next_state in env.P[init_state][action]:
+  #       print(next_state)
+  # for _ in range(10):
+  #   env.render()
+  #   env.step(env.action_space.sample())
+
+  # policy = learn_with_mdp_model(env)
+  # render_single(env, policy)
 
 if __name__ == '__main__':
     main()
