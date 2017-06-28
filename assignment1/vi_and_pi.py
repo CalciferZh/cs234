@@ -15,6 +15,7 @@ def compute_value(P, V, nS, action, state):
 		# print("State %d, action %d, next state %d, reward %g, because prob is %g and value is %g" % (state, action, P[state][action][i][1], reward, P[state][action][i][0], V[P[state][action][i][1]]))
 	return reward
 
+
 def value_iteration(P, nS, nA, terminal_states, gamma=0.9, max_iteration=20, tol=1e-3):
 	"""
 	Learn value function and policy by using value iteration method for a given
@@ -53,7 +54,6 @@ def value_iteration(P, nS, nA, terminal_states, gamma=0.9, max_iteration=20, tol
 	############################
 	# YOUR IMPLEMENTATION HERE #
 	# init terminal states of V
-
 	for k in range(max_iteration):
 		new_V = np.zeros(nS)
 		for state in range(nS):
@@ -66,8 +66,9 @@ def value_iteration(P, nS, nA, terminal_states, gamma=0.9, max_iteration=20, tol
 		V = new_V
 
 	for state, value in enumerate(V):
-		print("%d: %g" % (state, value))
+		print("state %d: %g" % (state, value))
 
+	return V
 	############################
 	return V, policy
 
