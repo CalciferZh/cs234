@@ -67,7 +67,7 @@ def initialize_rewards(nS, nA):
 
   return rewards
 
-def counts_and_rewards_to_P(counts, rewards):
+def counts_and_rewards_to_P(counts, rewards, terminal_states):
   """Converts counts and rewards arrays to a P array consistent with the Gym environment data structure for a model of the environment.
     Use this function to convert your counts and rewards arrays to a P that you can use in value iteration.
 
@@ -97,9 +97,9 @@ def counts_and_rewards_to_P(counts, rewards):
             reward = float(rewards[state][action][next_state]) / float(counts[state][action][next_state])
             P[state][action].append((prob, next_state, reward, False))
       else:
-        prob = 1.0 / float(nS)
-        for next_state in range(nS):
-          P[state][action].append((prob, next_state, 0, False))
+        # since in this game only terminate state won't be visited
+        # P[state][action].append((1.0, state, terminal_states[state], True))
+        pass
 
   return P
 
@@ -122,6 +122,7 @@ def update_mdp_model_with_history(counts, rewards, history):
 
   ############################
   # YOUR IMPLEMENTATION HERE #
+  # Don't need this anymore. #
   ############################
 
   return counts, rewards
@@ -172,6 +173,7 @@ def learn_with_mdp_model(env, num_episodes=5000, gamma = 0.95, e = 0.8, decay_ra
   P = initialize_P(env.nS, env.nA)
   counts = initialize_counts(env.nS, env.nA)
   rewards = initialize_rewards(env.nS, env.nA)
+  terminal_states = {}
 
   ############################
   # YOUR IMPLEMENTATION HERE #
@@ -186,11 +188,13 @@ def learn_with_mdp_model(env, num_episodes=5000, gamma = 0.95, e = 0.8, decay_ra
       counts[state][action][obs] += 1
       state = obs
       if done:
+        terminal_states[obs] = reward
         break
 
-  P = counts_and_rewards_to_P(counts, rewards)
+  P = counts_and_rewards_to_P(counts, rewards, terminal_states)
+  # display_P(P)
+  value_iteration(P, nS, nA, terminal_states)
 
-  display_P(P)
   ############################
 
   return np.zeros((env.nS)).astype(int)

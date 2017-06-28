@@ -8,8 +8,14 @@ from lake_envs import *
 
 np.set_printoptions(precision=3)
 
+def compute_value(P, V, nS, action, state):
+	reward = 0
+	for i in range(len(P[state][action])):
+		reward += P[state][action][i][0] * V[P[state][action][i][1]]
+		# print("State %d, action %d, next state %d, reward %g, because prob is %g and value is %g" % (state, action, P[state][action][i][1], reward, P[state][action][i][0], V[P[state][action][i][1]]))
+	return reward
 
-def value_iteration(P, nS, nA, gamma=0.9, max_iteration=20, tol=1e-3):
+def value_iteration(P, nS, nA, terminal_states, gamma=0.9, max_iteration=20, tol=1e-3):
 	"""
 	Learn value function and policy by using value iteration method for a given
 	gamma and environment.
@@ -36,8 +42,32 @@ def value_iteration(P, nS, nA, gamma=0.9, max_iteration=20, tol=1e-3):
 	"""
 	V = np.zeros(nS)
 	policy = np.zeros(nS, dtype=int)
+	im_reward = [[[] for j in range(nA)] for i in range(nS)]
+	for state in range(nS):
+		for action in range(nA):
+			if state in terminal_states.keys():
+				im_reward[state][action] = terminal_states[state]
+			else:
+				im_reward[state][action] = 0
+
 	############################
 	# YOUR IMPLEMENTATION HERE #
+	# init terminal states of V
+
+	for k in range(max_iteration):
+		new_V = np.zeros(nS)
+		for state in range(nS):
+			opt_reward = 0
+			for action in range(nA):
+				reward = gamma * compute_value(P, V, nS, action, state) + im_reward[state][action]
+				if reward >= opt_reward:
+					opt_reward = reward
+			new_V[state] = opt_reward
+		V = new_V
+
+	for state, value in enumerate(V):
+		print("%d: %g" % (state, value))
+
 	############################
 	return V, policy
 
@@ -139,7 +169,6 @@ def policy_iteration(P, nS, nA, gamma=0.9, max_iteration=20, tol=1e-3):
 	return V, policy
 
 
-
 def example(env):
 	"""Show an example of gym
 	Parameters
@@ -160,6 +189,7 @@ def example(env):
 			break
 	assert done
 	env.render();
+
 
 def render_single(env, policy):
 	"""Renders policy once on environment. Watch your agent play!
