@@ -7,7 +7,7 @@ import gym
 import time
 from lake_envs import *
 
-def learn_Q_QLearning(env, num_episodes=2000, gamma=0.95, lr=0.1, e=0.8, decay_rate=0.99):
+def learn_Q_QLearning(env, num_episodes=2000, gamma=0.95, lr=0.1, e=0.99, decay_rate=0.99):
   """Learn state-action values using the Q-learning algorithm with epsilon-greedy exploration strategy.
   Update Q at the end of every episode.
 
@@ -35,9 +35,56 @@ def learn_Q_QLearning(env, num_episodes=2000, gamma=0.95, lr=0.1, e=0.8, decay_r
   
   ############################
   # YOUR IMPLEMENTATION HERE #
-  ############################
+  nA = env.nA
+  nS = env.nS
+  Q = np.zeros((nS, nA))
+  for epi in range(num_episodes):
+    # start a new episode
+    state = env.reset()
+    action = None
+    # run until done
+    # print("==================================================================")
+    # print("Trying new episode...")
+    # print(Q)
+    while True:
+      # print("At state %d" % state)
+      action = 0
+      epsilon = np.random.random()
+      if epsilon > e:
+        opt_reward = 0
+        # take the action maximize Q[state][action]
+        for i in range(nA):
+          if Q[state, i] >= opt_reward:
+            opt_reward = Q[state, i]
+            action = i
+        # print("Decide to exploit: e = %g, take action %d" % (e, action))
+      else:
+        # take a random action
+        action = np.random.randint(nA)
+        # print("Decide to explore: e = %g, take action %d" % (e, action))
+      # take that action and observe
+      new_state, im_reward, done, info = env.step(action)
 
-  return np.zeros((env.nS, env.nA))
+      # print("Reach new state %d, get im_reward %g" % (new_state, im_reward))
+
+      opt_Q = 0
+      for i in range(nA):
+        if Q[new_state][i] >= opt_Q:
+          opt_Q = Q[new_state][i]
+      Q_sample = im_reward + gamma * opt_Q
+      
+      # print("At new state %d, Q sample is %g" % (new_state, Q_sample))
+
+      Q[state][action] = (1 - lr) * Q[state][action] + lr * Q_sample
+      if done:
+        break
+      state = new_state
+    if epi % 10 == 0:
+      e *= decay_rate
+
+
+  ############################
+  return Q
 
 def learn_Q_SARSA(env, num_episodes=2000, gamma=0.95, lr=0.1, e=0.8, decay_rate=0.99):
   """Learn state-action values using the SARSA algorithm with epsilon-greedy exploration strategy
@@ -88,12 +135,13 @@ def render_single_Q(env, Q):
   done = False
   while not done:
     env.render()
-    time.sleep(0.5) # Seconds between frames. Modify as you wish.
+    # time.sleep(0.5) # Seconds between frames. Modify as you wish.
     action = np.argmax(Q[state])
     state, reward, done, _ = env.step(action)
     episode_reward += reward
+    input()
 
-  print "Episode reward: %f" % episode_reward
+  print("Episode reward: %f" % episode_reward)
 
 # Feel free to run your own debug code in main!
 def main():

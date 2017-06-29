@@ -1,0 +1,151 @@
+
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+  (Left)
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+  (Left)
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+  (Left)
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+  (Left)
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+  (Left)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+  (Left)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+  (Left)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+  (Left)
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+  (Left)
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+  (Left)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+  (Left)
+SFFF
+FHFH
+[41mF[0mFFH
+HFFG
+  (Up)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+  (Left)
+SFFF
+FHFH
+[41mF[0mFFH
+HFFG
+  (Up)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+  (Left)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+  (Left)
+SFFF
+FHFH
+[41mF[0mFFH
+HFFG
+  (Up)
+SFFF
+FHFH
+F[41mF[0mFH
+HFFG
+  (Down)
+SFFF
+FHFH
+FFFH
+H[41mF[0mFG
+  (Right)
+SFFF
+FHFH
+FFFH
+HF[41mF[0mG
+  (Down)
+SFFF
+FHFH
+FFFH
+HF[41mF[0mG
+  (Down)
+SFFF
+FHFH
+FFFH
+HF[41mF[0mG
+  (Down)
+SFFF
+FHFH
+FFFH
+H[41mF[0mFG
+  (Right)
+SFFF
+FHFH
+FFFH
+H[41mF[0mFG
+  (Right)
+SFFF
+FHFH
+FFFH
+H[41mF[0mFG
+  (Right)
+SFFF
+FHFH
+F[41mF[0mFH
+HFFG
+  (Down)
+SFFF
+FHFH
+FFFH
+H[41mF[0mFG
+  (Right)
+SFFF
+FHFH
+FFFH
+H[41mF[0mFG
+  (Right)
+SFFF
+FHFH
+FFFH
+H[41mF[0mFG
+  (Right)
+SFFF
+FHFH
+FFFH
+HF[41mF[0mG
+Episode reward: 1.000000
