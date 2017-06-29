@@ -8,7 +8,7 @@ import time
 import os
 from lake_envs import *
 
-from vi_and_pi import value_iteration
+from vi_and_pi import value_iteration, policy_iteration
 
 def initialize_P(nS, nA):
   """Initializes a uniformly random model of the environment with 0 rewards.
@@ -134,6 +134,25 @@ def display_P(P):
       for next_state in P[init_state][action]:
         print(next_state)
 
+def learn_with_VI(P, nS, nA, terminal_states):
+  V = value_iteration(P, nS, nA, terminal_states)
+  policy = np.zeros((nS)).astype(int)
+
+  for state in range(nS):
+    opt_reward = 0
+    opt_action = 0
+    for action in range(nA):
+      reward = 0
+      for i in range(len(P[state][action])):
+        # print("possible next state %d, prob %g, V %g, E(V) %g" % (P[state][action][i][1], P[state][action][i][0], V[P[state][action][i][1]], P[state][action][i][0] * V[P[state][action][i][1]]))
+        reward += P[state][action][i][0] * V[P[state][action][i][1]]
+        # print("state %d, action %d, reward %g" % (state, action, reward))
+      if reward > opt_reward:
+        opt_reward = reward
+        opt_action = action
+    policy[state] = opt_action
+    # print("state %d, policy %d, expected reward %g" % (state, opt_action, opt_reward))
+
 def learn_with_mdp_model(env, num_episodes=5000, gamma = 0.95, e = 0.8, decay_rate = 0.99):
   """Build a model of the environment and use value iteration to learn a policy. In the next episode, play with the new 
     policy using epsilon-greedy exploration. 
@@ -193,35 +212,8 @@ def learn_with_mdp_model(env, num_episodes=5000, gamma = 0.95, e = 0.8, decay_ra
 
   P = counts_and_rewards_to_P(counts, rewards, terminal_states)
   # display_P(P)
-  V = value_iteration(P, nS, nA, terminal_states)
-  policy = np.zeros((nS)).astype(int)
-
-  # strange here, to be discussed later
-  # for state in range(nS):
-  #   opt_reward = 0
-  #   opt_action = 0
-  #   for action in range(nA):
-  #     for i in range(len(P[state][action])):
-  #       if V[P[state][action][i][1]] > opt_reward:
-  #         opt_reward = V[P[state][action][i][1]]
-  #         opt_action = action
-  #   policy[state] = opt_action
-  #   print("state %d, policy %d, expected reward %g" % (state, opt_action, opt_reward))
-
-  for state in range(nS):
-    opt_reward = 0
-    opt_action = 0
-    for action in range(nA):
-      reward = 0
-      for i in range(len(P[state][action])):
-        # print("possible next state %d, prob %g, V %g, E(V) %g" % (P[state][action][i][1], P[state][action][i][0], V[P[state][action][i][1]], P[state][action][i][0] * V[P[state][action][i][1]]))
-        reward += P[state][action][i][0] * V[P[state][action][i][1]]
-        # print("state %d, action %d, reward %g" % (state, action, reward))
-      if reward > opt_reward:
-        opt_reward = reward
-        opt_action = action
-    policy[state] = opt_action
-    print("state %d, policy %d, expected reward %g" % (state, opt_action, opt_reward))
+  # policy = learn_with_VI(P, nS, nA, terminal_states)
+  policy = policy_iteration(P, nS, nA, terminal_states)
 
   ############################
 
