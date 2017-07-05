@@ -133,7 +133,7 @@ class Progbar(object):
                 else:
                     info += ' - %s: %s' % (k, self.sum_values[k])
 
-            for k, v in self.exp_avg.iteritems():
+            for k, v in self.exp_avg.items():
                 info += ' - %s: %.4f' % (k, v)
 
             self.total_width += len(info)
