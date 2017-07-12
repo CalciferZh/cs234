@@ -1,9 +1,6 @@
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
 
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
-
 from utils.general import get_logger
 from utils.test_env import EnvTest
 from core.deep_q_learning import DQN
