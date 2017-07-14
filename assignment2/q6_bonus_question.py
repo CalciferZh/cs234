@@ -49,7 +49,6 @@ class MyDQN(Linear):
         """
         # this information might be useful
         num_actions = self.env.action_space.n
-        out = state
         ##############################################################
         """
         TODO: implement the computation of Q values like in the paper
@@ -65,7 +64,15 @@ class MyDQN(Linear):
         ##############################################################
         ################ YOUR CODE HERE - 10-15 lines ################ 
         
-        pass
+        with tf.variable_scope(scope, reuse=reuse):
+            h1 = layers.conv2d(state, 32, 7, stride=3)
+            h2 = layers.conv2d(h1, 32, 5, stride=2)
+            h3 = layers.conv2d(h2, 32, 3, stride=1)
+            h4 = layers.conv2d(h3, 32, 1, stride=1)
+            stick = layers.flatten(h4)
+            h5 = layers.fully_connected(stick, 1024)
+            h6 = layers.fully_connected(h5, 1024)
+            out = layers.fully_connected(h6, num_actions, activation_fn=None)
 
         ##############################################################
         ######################## END YOUR CODE #######################
